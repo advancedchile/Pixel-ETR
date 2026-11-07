@@ -89,6 +89,49 @@ globalThis.PixelTerrain = (() => {
  else{for(let j=0;j<6;j++){r(-14+j*5,Math.sin(j)*5,1,4+j%3,'#9bad67');if(j%2)r(-14+j*5,Math.sin(j)*5,3,2,v%2?'#d8b07d':'#c6c99a');}}
  }
  function resource(g,n,time){const p={x:n.x,y:n.y};g.save();g.translate(p.x,p.y);if(n.kind==='fish'){for(let i=0;i<5;i++){const xx=Math.sin(time*.6+i*1.3)*17,yy=Math.cos(time*.8+i)*9;polygon(g,[[xx-6,yy],[xx+3,yy-3],[xx+7,yy],[xx+3,yy+3]],i%2?'#9ac9c4':'#cbdaca');polygon(g,[[xx-5,yy],[xx-10,yy-3],[xx-10,yy+3]],'#86b9c0');}g.strokeStyle='#c4e3d077';g.beginPath();g.ellipse(0,0,27+Math.sin(time)*2,13,0,0,7);g.stroke();}
- else if(n.kind==='gas'){if(n.aquatic){g.strokeStyle='#afe8c5';g.beginPath();g.ellipse(0,0,29,14,0,0,7);g.stroke();}polygon(g,[[-24,0],[0,-13],[24,0],[0,13]],'#36483e');for(let i=0;i<4;i++){g.fillStyle=['#85c393','#b5d78a','#599b7b'][i%3];g.fillRect(-14+i*8,-12-i%2*5,7,17);}for(let i=0;i<4;i++){const a=(time*.35+i*.25)%1;g.fillStyle='#a3d9ac44';g.fillRect(-12+i*7,-20-a*30,5+a*9,4+a*6);}}else{polygon(g,[[-28,2],[0,-13],[28,2],[0,15]],'#294b54');for(let i=0;i<5;i++){const x=-23+i*10,h=15+(i*13%22);polygon(g,[[x,-h],[x+6,-h-6],[x+9,3],[x,8]],'#57afc6');polygon(g,[[x+6,-h-6],[x+13,-h],[x+14,3],[x+9,3]],'#247691');g.fillStyle='#b5f1e9';g.fillRect(x+3,-h+2,2,h-4);}}g.restore();}
+ else{
+ const seed=(n.id||0)*97+Math.floor(n.capacity||7000),rnd=(i,j=0)=>hash(i,j,seed),richness=Math.max(0,Math.min(1,(n.amount??n.capacity??1)/(n.capacity||1)));
+ const dot=(x,y,w,h,c)=>{g.fillStyle=c;g.fillRect(Math.round(x),Math.round(y),w,h);};
+ // Rock faces share a fixed light direction but each deposit has a different silhouette.
+ function rock(x,y,w,h,tint=false){
+ const left=[x-w,y-2],tip=[x-w*.23,y-h],back=[x+w*.47,y-h*.76],right=[x+w,y-3],front=[x+w*.18,y+6],lower=[x-w*.63,y+4];
+ polygon(g,[left,tip,back,right,front,lower],tint?'#456267':'#515950');
+ polygon(g,[left,tip,[x+w*.05,y-h*.38],lower],tint?'#65838a':'#969b86');
+ polygon(g,[tip,back,right,[x+w*.05,y-h*.38]],tint?'#789d9e':'#b0b19a');
+ polygon(g,[[x+w*.05,y-h*.38],right,front,lower],tint?'#294f59':'#606a60');
+ polygon(g,[lower,front,[x+w*.08,y+9],[x-w*.6,y+7]],tint?'#203f48':'#35443c');
+ g.strokeStyle=tint?'#a8c9c055':'#d1cdb366';g.lineWidth=1;g.beginPath();g.moveTo(...tip);g.lineTo(x+w*.05,y-h*.38);g.lineTo(...lower);g.stroke();
+ for(let j=0;j<10;j++){const xx=x+(rnd(j,Math.round(x)+20)-.5)*w*1.1,yy=y-h*.45+rnd(j,Math.round(y)+35)*h*.4;dot(xx,yy,1+j%2,1,j%3?'#1c303144':'#d4d1af66');}
+ }
+ if(n.kind==='mineral'){
+ polygon(g,[[-33,0],[-23,-13],[4,-17],[27,-8],[35,5],[16,16],[-16,16]],'#253b3377');
+ polygon(g,[[-29,1],[-19,-9],[5,-12],[25,-5],[28,6],[9,13],[-19,11]],'#766e54');
+ for(let i=0;i<12;i++){const a=rnd(i,1)*Math.PI*2,r=23+rnd(i,2)*10;rock(Math.cos(a)*r,Math.sin(a)*r*.4,2+rnd(i,3)*2,2+rnd(i,4)*3);}
+ const chunks=[[-15,-3,13,17],[5,-7,15,25],[20,3,11,15],[-7,7,15,20]];
+ chunks.forEach(([xx,yy,ww,hh],i)=>{const x=xx+(rnd(i,8)-.5)*5,y=yy,h=hh*(.8+rnd(i,9)*.4);rock(x,y,ww,h);
+ // Fractured blue-grey ore seams embedded in the host rock, rather than crystal pillars.
+ if(richness>0){polygon(g,[[x-ww*.58,y-h*.46],[x-ww*.2,y-h*.7],[x+ww*.08,y-h*.48],[x+ww*.52,y-h*.57],[x+ww*.67,y-h*.43],[x+ww*.05,y-h*.29],[x-ww*.24,y-h*.48],[x-ww*.58,y-h*.31]],richness>.25?'#58a6b5':'#4b7780');
+ dot(x-ww*.2,y-h*.56,3,2,'#b0d4ce');dot(x+ww*.28,y-h*.46,2,1,'#b9d6ca');
+ for(let j=0;j<Math.ceil(richness*5);j++){const px=x+(rnd(j,i+50)-.5)*ww,py=y-h*.22+rnd(j,i+65)*h*.25;polygon(g,[[px,py-3],[px+3,py-4],[px+5,py],[px+1,py+2]],j%2?'#69aab6':'#3d8295');dot(px+1,py-2,1,2,'#bdded7');}}
+ });
+ }else if(n.kind==='gas'){
+ const wet=!!n.aquatic;
+ polygon(g,[[-32,0],[-23,-11],[0,-17],[27,-9],[33,3],[19,15],[-14,16]],wet?'#153f4888':'#313c2e99');
+ polygon(g,[[-25,0],[-15,-10],[7,-12],[24,-3],[22,8],[1,12],[-20,8]],wet?'#2a5556':'#8b8058');
+ polygon(g,[[-20,0],[-10,-7],[8,-8],[19,-1],[10,7],[-10,6]],wet?'#102f3b':'#29362d');
+ // Broken rim, mineral staining and hairline fissures around the vent.
+ for(let i=0;i<9;i++){const a=i*Math.PI*2/9+.2,x=Math.cos(a)*(22+rnd(i,31)*3),y=Math.sin(a)*10;rock(x,y,4+rnd(i,32)*3,3+rnd(i,33)*5,wet);if(!wet)dot(x-1,y-3,3,1,'#bdaf73');}
+ for(let i=0;i<5;i++){const a=i*1.3+.4,x=Math.cos(a)*12,y=Math.sin(a)*5;g.strokeStyle=wet?'#183f48':'#1b2d2c';g.beginPath();g.moveTo(x*.3,y*.3);g.lineTo(x,y);g.lineTo(x*1.7+3,y*1.7);g.stroke();}
+ if(richness>0&&wet){
+ // Rising bubbles and expanding surface ripples identify a submerged gas seep.
+ for(let i=0;i<7;i++){const phase=(time*(.27+rnd(i,41)*.13)+rnd(i,42))%1,x=(rnd(i,43)-.5)*23+Math.sin(time+i)*2,y=5-phase*26,r=1+phase*2;g.strokeStyle='#a9d6ca'+(phase>.8?'44':'aa');g.lineWidth=1;g.beginPath();g.ellipse(Math.round(x),Math.round(y),r,r*.7,0,0,7);g.stroke();dot(x-1,y-1,1,1,'#d0e9d3');}
+ for(let i=0;i<2;i++){const a=(time*.35+i*.5)%1;g.strokeStyle=a>.7?'#7eb7ad33':'#8cc7bb77';g.beginPath();g.ellipse(0,0,10+a*24,4+a*11,0,.3,2.6);g.stroke();g.beginPath();g.ellipse(0,0,10+a*24,4+a*11,0,3.5,5.7);g.stroke();}
+ }else if(richness>0){
+ // Low, translucent vapor emerges from the dark fissure and drifts with the wind.
+ for(let i=0;i<7;i++){const a=(time*.25+i/7)%1,x=-3+a*10+Math.sin(i*2+time*.7)*3,y=-2-a*35,w=3+a*10;polygon(g,[[x-w,y],[x-w*.7,y-w*.45],[x,y-w*.7],[x+w*.8,y-w*.25],[x+w,y+2],[x+w*.2,y+w*.45],[x-w*.6,y+w*.3]],a>.75?'#bdc6a414':a>.4?'#b8c5a32b':'#d2d6ae44');}
+ }
+ }
+ }g.restore();}
+
  return {TILE,SIZES,generate,cell,elevation,project,unproject,pick,passable,waterNear,segment,path,tile,decoration,resource,colors,hash};
 })();

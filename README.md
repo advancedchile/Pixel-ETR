@@ -11,6 +11,7 @@ Estrategia en tiempo real en español: tres facciones, mapas isométricos proced
 - Animación de marcha, orientación en ocho direcciones, movimiento de orugas, levitación, retroceso, minería, construcción con andamios y aparición progresiva, investigación y luces de actividad.
 - Terreno con mar, lagos, ríos sinuosos, puentes, aguas someras, playas, dos tipos de árboles, vegetación, rocas, acantilados escalonados, valles y montañas con cumbres nevadas. Texturas, espuma, oleaje y sombras procedurales.
 - Mapas generados por **semilla reproducible**, botón para generar otra semilla, vista previa y cinco tamaños.
+- Depósitos minerales con roca fracturada, vetas incrustadas y fragmentos dispersos; gas terrestre con grietas, costras minerales y vapor, y gas submarino con burbujas y ondas. Siluetas distintas por depósito y menor presencia de mena al agotarse.
 - Recursos seleccionables con cantidad restante y capacidad inicial. Cada depósito de minerales, gas, madera o peces contiene entre **5.000 y 10.000** unidades.
 - Los trabajadores cargan **15** unidades por viaje. Se oyen perforación, extracción de gas, recogida y descarga en el núcleo.
 - Diez roles de unidad: trabajador, infantería, infantería de asalto, tanque, artillería, caza, bombardero, patrullera, crucero y pesquero.
