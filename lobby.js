@@ -1,0 +1,21 @@
+'use strict';
+(() => {
+ const $=id=>document.getElementById(id),factions=globalThis.PixelFactions;
+ let saved={};try{saved=JSON.parse(localStorage.getItem('pixel-etr-settings-v2')||'{}')||{};}catch{}
+ let aiConfigs=Array.from({length:3},(_,i)=>({faction:['verdant','astral','aurora'][i],difficulty:'normal',...(saved.ais?.[i]||{})}));
+ const factionKeys=Object.keys(factions),validDifficulty=v=>['easy','normal','hard'].includes(v)?v:'normal';
+ if(factions[saved.faction])document.querySelector('input[name=faction][value="'+saved.faction+'"]').checked=true;
+ $('aiCount').value=String(Math.max(1,Math.min(3,Number(saved.count)||1)));
+ function read(){return {faction:document.querySelector('input[name=faction]:checked').value,ais:aiConfigs.slice(0,Number($('aiCount').value)).map(a=>({faction:factions[a.faction]?a.faction:'aurora',difficulty:validDifficulty(a.difficulty)}))};}
+ function persist(){try{const c=read();localStorage.setItem('pixel-etr-settings-v2',JSON.stringify({...c,count:c.ais.length,ais:aiConfigs,music:Number($('musicVolume').value),effects:Number($('effectsVolume').value)}));}catch{}}
+ function summary(){const config=read();$('matchSummary').textContent=factions[config.faction].name+' · Tú contra '+config.ais.length+' IA'+(config.ais.length>1?' aliadas':'')+' · '+config.ais.map(a=>PixelDifficulty[a.difficulty].label).join(' / ');persist();}
+ function rows(){const count=Number($('aiCount').value);$('aiRows').innerHTML=aiConfigs.slice(0,count).map((ai,i)=>'<div class="ai-row" style="--enemy:'+['#fb9478','#f7c36b','#f28ac2'][i]+'"><span>IA '+(i+1)+'</span><div><label for="ai-faction-'+i+'">FACCIÓN</label><select id="ai-faction-'+i+'" data-slot="'+i+'" data-field="faction">'+factionKeys.map(k=>'<option value="'+k+'" '+(k===ai.faction?'selected':'')+'>'+factions[k].short+'</option>').join('')+'</select></div><div><label for="ai-difficulty-'+i+'">DIFICULTAD</label><select id="ai-difficulty-'+i+'" data-slot="'+i+'" data-field="difficulty">'+Object.entries(PixelDifficulty).map(([k,v])=>'<option value="'+k+'" '+(k===ai.difficulty?'selected':'')+'>'+v.label+'</option>').join('')+'</select></div></div>').join('');summary();}
+ $('aiCount').addEventListener('change',rows);$('aiRows').addEventListener('change',e=>{if(e.target.dataset.slot===undefined)return;aiConfigs[Number(e.target.dataset.slot)][e.target.dataset.field]=e.target.value;summary();});document.querySelectorAll('input[name=faction]').forEach(el=>el.addEventListener('change',summary));
+ function volumes(kind,value){value=Math.max(0,Math.min(100,Number(value)));const music=kind==='music',ids=music?['musicVolume','gameMusic']:['effectsVolume','gameEffects'],outputs=music?['musicValue','gameMusicValue']:['effectsValue','gameEffectsValue'];ids.forEach(id=>$(id).value=value);outputs.forEach(id=>$(id).textContent=value+'%');if(music)PixelAudio.setMusic(value/100);else PixelAudio.setEffects(value/100);persist();}
+ for(const [id,kind] of [['musicVolume','music'],['gameMusic','music'],['effectsVolume','effects'],['gameEffects','effects']])$(id).addEventListener('input',e=>volumes(kind,e.target.value));
+ volumes('music',Number.isFinite(saved.music)?saved.music:35);volumes('effects',Number.isFinite(saved.effects)?saved.effects:65);
+ let muted=false;$('sound').onclick=()=>{muted=!muted;PixelAudio.mute(muted);$('sound').textContent=muted?'♪̸':'♫';$('sound').setAttribute('aria-pressed',String(muted));$('sound').setAttribute('aria-label',muted?'Activar audio':'Silenciar audio');};
+ $('audioSettings').onclick=()=>$('audioDialog').showModal();$('closeAudio').onclick=()=>$('audioDialog').close();
+ let previous=0;function preview(now){if($('intro').open&&now-previous>70){previous=now;for(const key of factionKeys){const c=$('preview-'+key),g=c.getContext('2d');g.clearRect(0,0,c.width,c.height);g.imageSmoothingEnabled=false;['worker','marine','tank'].forEach((type,i)=>PixelModels.draw(g,{id:i,type,team:0,x:44+i*84,y:68,size:type==='tank'?20:11,walk:now/22,moving:true,facing:-Math.PI/4,flash:0},factions[key],now/1000));}}requestAnimationFrame(preview);}
+ globalThis.PixelLobby={read};rows();requestAnimationFrame(preview);
+})();

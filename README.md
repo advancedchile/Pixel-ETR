@@ -1,31 +1,53 @@
 # Pixel ETR — Frontera de ceniza
 
-Un juego de estrategia en tiempo real en español, con gráficos pixel art originales y una escaramuza contra la IA. Inspirado en mecánicas clásicas del género: economía, construcción, producción, suministros y control del ejército. No incluye recursos, personajes ni código de StarCraft.
+**[Jugar en GitHub Pages](https://advancedchile.github.io/Pixel-ETR/)**
 
-**Jugar:** https://advancedchile.github.io/Pixel-ETR/
+Estrategia en tiempo real en español, con pixel art original, tres facciones y escaramuzas contra una coalición de una a tres IA. Sin instalación ni cuenta. Pensado para ordenador con ratón y teclado.
 
-## La misión
+## Operación 02
 
-Dirige la Colonia Aurora y destruye el núcleo de la Legión Carmesí, situado al noreste. Protege tu núcleo: su destrucción termina la partida. Los recolectores iniciales trabajan automáticamente. La IA defiende su base y envía oleadas cada vez mayores. Elige entre Explorador, Comandante y Veterano.
+- Sala de preparación con selección de facción, número de rivales y facción/dificultad independiente de cada IA.
+- Tres familias visuales: maquinaria industrial, criaturas biomecánicas y unidades flotantes de cristal.
+- Movimiento orientado en ocho direcciones, ciclos de orugas y patas, levitación, retroceso y fogonazos.
+- Construcción progresiva con andamios, aparición de estructuras, escaneo y chispas de soldadura. Animaciones de minería, producción de gas y luces de edificios.
+- Efectos sintetizados de selección, órdenes, movimiento, minería, construcción, producción, disparos, explosiones, oleadas y resultados. Los efectos locales solo se oyen en la zona visible cercana a la cámara.
+- Banda sonora procedural **original**, con capas ambientales, bajo, percusión, arpegios y variaciones por facción. No contiene grabaciones ni melodías de StarCraft.
+- Volúmenes separados para música y efectos, silencio global y pausa de audio junto con el juego. El audio comienza tras pulsar «Desplegar colonia».
+- Preferencias de facción, rivales y volumen guardadas en el navegador. No se guardan partidas en curso.
 
-## Mecánicas
+## Facciones
 
-- Minerales finitos: los recolectores extraen 10 por viaje y los entregan al núcleo.
-- Gas: cada refinería terminada produce 1,8 unidades por segundo automáticamente.
-- Suministros: núcleo 20; cada depósito añade 10; máximo 200. Las unidades en cola reservan suministros.
-- Construcción: requiere un recolector que llegue a la obra. Si recibe otra orden, la obra se detiene; clic derecho sobre ella con un recolector permite continuar.
-- Producción: colas de hasta cinco unidades por edificio.
-- Fusileros de alcance medio, tanques resistentes con daño de área y torretas defensivas.
-- Niebla de guerra, exploración persistente, minimapa y grupos de control.
-- Victoria, derrota, pausa y reinicio. La partida se pausa al cambiar de ventana.
+| Facción | Estilo | Ventajas y compensaciones |
+| --- | --- | --- |
+| Unión Aurora | Ingeniería industrial | Construcción 15% más rápida; unidades equilibradas |
+| Enjambre Verdante | Biomecánica | Unidades 25% más rápidas, producción 15% más rápida y 15% menos vida |
+| Conclave Astral | Cristal y energía | Unidades con 25% más vida y 10% más daño, 15% más lentas y producción 15% más larga |
 
-| Unidad | Minerales | Gas | Suministros | Producción |
-| --- | ---: | ---: | ---: | --- |
-| Recolector | 50 | 0 | 1 | Núcleo, 7 s |
-| Fusilero | 60 | 0 | 1 | Cuartel, 9 s |
-| Tanque Atlas | 150 | 75 | 3 | Fábrica, 19 s |
+Las bonificaciones de vida, daño y velocidad afectan a las unidades móviles, no a las estructuras. Cada facción mantiene los mismos costes y suministros.
 
-| Edificio | Minerales | Gas | Tiempo |
+| Función | Aurora | Verdante | Astral | Minerales / gas / suministros |
+| --- | --- | --- | --- | --- |
+| Recolección | Ingeniero | Zángano | Sonda | 50 / 0 / 1 |
+| Infantería | Explorador | Acechador | Custodio | 60 / 0 / 1 |
+| Unidad pesada | Atlas | Escarabajo | Prisma | 150 / 75 / 3 |
+
+## Objetivo y rivales
+
+Destruye **todos** los núcleos enemigos sin perder el tuyo. Las IA son aliadas entre sí y no se atacan. Al destruir un núcleo rival, su ejército y edificios se retiran, y deja de recibir refuerzos. El radar muestra el siguiente ataque de cada rival.
+
+| Dificultad de la IA | Primera oleada | Intervalo | Unidades de la primera oleada |
+| --- | ---: | ---: | ---: |
+| Explorador | 160 s | 140 s | 5 |
+| Comandante | 120 s | 110 s | 6 |
+| Veterano | 85 s | 75 s | 8 |
+
+La IA 2 comienza 18 segundos después y la IA 3, 36 segundos después del tiempo de su dificultad. Las oleadas crecen de dos en dos hasta 16 unidades e incluyen una unidad pesada desde la segunda. Las posiciones iniciales de los rivales son noreste, noroeste y sureste. Más rivales supone más presión; sus dificultades se configuran por separado.
+
+## Economía y construcción
+
+Los seis recolectores iniciales trabajan automáticamente. Los minerales son finitos y se transportan al núcleo en lotes de diez. Cada refinería terminada genera 1,8 unidades de gas por segundo. El núcleo aporta 20 suministros y cada depósito añade diez, hasta un máximo de 200. Las colas de producción, de hasta cinco unidades, reservan suministros al encargar una unidad.
+
+| Estructura | Minerales | Gas | Tiempo base |
 | --- | ---: | ---: | ---: |
 | Depósito | 100 | 0 | 12 s |
 | Cuartel | 150 | 0 | 18 s |
@@ -33,9 +55,9 @@ Dirige la Colonia Aurora y destruye el núcleo de la Legión Carmesí, situado a
 | Fábrica | 200 | 75 | 26 s |
 | Torreta | 100 | 25 | 14 s |
 
-## Controles
+Aurora reduce los tiempos de construcción un 15%. Los tiempos base de producción de recolector, infantería y unidad pesada son 7, 9 y 19 segundos, modificados por la facción. La fábrica requiere un cuartel terminado. Construir necesita un recolector que llegue a la obra: darle otra orden detiene la construcción. Clic derecho sobre la obra con un recolector la reanuda.
 
-Pensado para ordenador con ratón y teclado.
+## Controles
 
 | Acción | Control |
 | --- | --- |
@@ -49,29 +71,31 @@ Pensado para ordenador con ratón y teclado.
 | Cancelar colocación | Esc o clic derecho |
 | Mover cámara | Flechas o clic en minimapa |
 | Volver a la base | Espacio |
-| Guardar grupo / seleccionar grupo | Ctrl + 1–5 / 1–5 |
-| Pausar | P |
-| Ayuda completa | Botón ? |
+| Guardar / seleccionar grupo | Ctrl + 1–5 / 1–5 |
+| Pausa | P |
+| Silencio / volúmenes / ayuda | ♫ / ⚙ / ? |
 
-Los botones muestran los atajos de producción y construcción. Consejos: construye pronto una refinería, mantén el cuartel produciendo y combina tanques con infantería. Las oleadas comienzan a los 160, 120 u 85 segundos, según dificultad.
+El juego se pausa al cambiar de ventana. Los botones muestran los atajos de producción y construcción.
 
-## Desarrollo
+## Desarrollo y verificación
 
-Aplicación estática sin dependencias de ejecución ni proceso de compilación. Abre `index.html` directamente o sirve la carpeta con `python3 -m http.server 8000` y visita `http://localhost:8000`.
+Aplicación estática sin dependencias de ejecución ni compilación. Abre `index.html` o sirve la carpeta con `python3 -m http.server 8000`.
 
 ```sh
-node --check game.js
-node --test tests/engine.test.cjs
+node --test tests/*.test.cjs
 ```
 
-Las pruebas ejecutan el motor en Node con un DOM y canvas simulados. Cubren economía, pausa, costes, reservas de suministros, límites de cola, construcción, gas, tanques, ataque, oleadas, victoria y derrota. No sustituyen una prueba visual en navegador. GitHub Actions ejecuta estas comprobaciones en cada push y pull request.
+- `game.js`: simulación, órdenes, IA, niebla, interfaz y minimapa.
+- `factions.js`: atributos, nombres y configuración de dificultad.
+- `models.js`: sprites y animación procedural en canvas.
+- `lobby.js`: preparación de partidas y preferencias locales.
+- `audio.js`: banda sonora y efectos con Web Audio.
+- `index.html` y `style.css`: interfaz y diseño adaptable.
 
-`index.html` contiene la interfaz; `style.css`, el diseño; `game.js`, la simulación, gráficos y controles. Todos los sprites se dibujan en canvas. Las fuentes de Google son opcionales: si no cargan se usan fuentes del sistema.
+Las 20 pruebas verifican economía, costes, suministros, construcción, combate, partidas completas, atributos de facciones, IA independientes, alianzas, eliminación, selección de rivales, preferencias, programación de audio, pausa, silencio y ausencia de Web Audio. Usan DOM, canvas y nodos de audio simulados; no equivalen a probar interacción, presentación y mezcla sonora en un navegador real. Los sprites también se revisaron mediante renderizado de canvas. GitHub Actions ejecuta comprobaciones de sintaxis y pruebas en cada push y pull request.
 
-## GitHub Pages
+## Publicación y alcance
 
-Publicación desde la raíz de la rama `main` en **Settings → Pages → Deploy from a branch**. `.nojekyll` evita procesamiento innecesario. Todos los recursos locales usan rutas relativas, compatibles con `/Pixel-ETR/`. Cada push a `main` actualiza el sitio.
+GitHub Pages publica la raíz de `main`. `.nojekyll` evita procesamiento adicional y los recursos usan rutas relativas. Cada push a `main` actualiza el sitio. Las fuentes de Google son opcionales; existen fuentes de respaldo del sistema. Si Web Audio no está disponible, el juego continúa sin sonido.
 
-## Alcance de esta versión
-
-Una facción jugable, un mapa, tres unidades y cinco estructuras construibles. IA basada en defensas y oleadas; no simula una economía rival. Movimiento con evitación local de edificios y separación de unidades. Sin multijugador, guardado de partidas, audio, árbol de mejoras ni controles táctiles completos.
+Un mapa, tres roles de unidad y cinco estructuras construibles por facción. La IA usa defensas y refuerzos por oleadas, no una economía simulada. Movimiento con evitación local de edificios y separación entre unidades. Sin multijugador en red, guardado de partidas, árbol de mejoras ni controles táctiles completos. No incluye recursos, personajes ni código de StarCraft.
