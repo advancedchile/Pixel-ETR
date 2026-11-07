@@ -33,6 +33,7 @@ globalThis.PixelAudio = (() => {
  async function start(faction='aurora'){theme=faction;if(!init())return false;try{await ctx.resume();}catch{return false;}clearScore();limits.clear();running=true;step=0;next=ctx.currentTime+.08;if(timer)clearInterval(timer);timer=setInterval(schedule,80);schedule();return true;}
  function pause(value){running=!value;if(ctx){if(value){ctx.suspend().catch(()=>{});}else{next=ctx.currentTime+.05;ctx.resume().catch(()=>{});}}}
  function stop(){running=false;clearScore();if(timer){clearInterval(timer);timer=null;}}
+ function defeat(){stop();if(!ctx||ctx.state!=='running'||muted||music===0)return;const t=ctx.currentTime+.04,hz=n=>440*2**((n-69)/12);[62,60,57,53,50].forEach((n,i)=>tone(hz(n),t+i*.48,i===4?1.8:.65,.12,'triangle',musicBus));for(const n of [38,45,50])tone(hz(n),t+1.9,1.9,.055,'sine',musicBus);}
  function sfx(kind,pan=0){if(!ctx||ctx.state!=='running'||muted||effects===0)return;const t=ctx.currentTime,min={shot:.055,tank:.12,build:.28,mine:.25,chop:.26,fish:.35,drill:.25,gasMine:.3,unload:.15,move:.1,step:.22,drive:.3}[kind]||.12;if(t-(limits.get(kind)??-10)<min)return;limits.set(kind,t);
   const p=ctx.createStereoPanner?ctx.createStereoPanner():ctx.createGain();if(p.pan)p.pan.value=Math.max(-.8,Math.min(.8,pan));p.connect(sfxBus);setTimeout(()=>p.disconnect(),1800);
   if(kind==='shot'){hiss(t,.07,.18,3800,p);tone(750,t,.1,.11,'sawtooth',p,130);}
@@ -50,5 +51,5 @@ globalThis.PixelAudio = (() => {
   else if(kind==='alert'||kind==='defeat'){[0,.23,.46].forEach(offset=>tone(360,t+offset,.2,.12,'sawtooth',p,240));}
   else {tone(kind==='select'?620:420,t,.1,.06,'sine',p,kind==='select'?950:660);}
  }
- return {start,pause,stop,sfx,setMusic(v){music=Math.max(0,Math.min(1,Number(v)||0));volumes();},setEffects(v){effects=Math.max(0,Math.min(1,Number(v)||0));volumes();},mute(v){muted=v;volumes();},get supported(){return !!(globalThis.AudioContext||globalThis.webkitAudioContext);}};
+ return {start,pause,stop,sfx,defeat,setMusic(v){music=Math.max(0,Math.min(1,Number(v)||0));volumes();},setEffects(v){effects=Math.max(0,Math.min(1,Number(v)||0));volumes();},mute(v){muted=v;volumes();},get supported(){return !!(globalThis.AudioContext||globalThis.webkitAudioContext);}};
 })();

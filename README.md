@@ -4,7 +4,7 @@
 
 Estrategia en tiempo real en español: tres facciones, mapas isométricos procedurales y una coalición de una a tres IA. Para ordenador con ratón y teclado. No requiere instalación ni cuenta.
 
-## Operación 06 — Control táctico
+## Operación 09 — Expansión anfibia
 
 - Proyección isométrica con elevación, orden de profundidad y zoom del 45% al 175%.
 - Modelos construidos con geometría volumétrica: caras iluminadas, paneles, remaches, rejillas, tuberías, trenes de rodaje, cubiertas navales, alas, propulsores y accesorios de facción.
@@ -14,7 +14,7 @@ Estrategia en tiempo real en español: tres facciones, mapas isométricos proced
 - Depósitos minerales con roca fracturada, vetas incrustadas y fragmentos dispersos; gas terrestre con grietas, costras minerales y vapor, y gas submarino con burbujas y ondas. Siluetas distintas por depósito y menor presencia de mena al agotarse.
 - Recursos seleccionables con cantidad restante y capacidad inicial. Cada depósito de minerales, gas, madera o peces contiene entre **5.000 y 10.000** unidades.
 - Los trabajadores cargan **15** unidades por viaje. Se oyen perforación, extracción de gas, recogida y descarga en el núcleo.
-- Diez roles de unidad: trabajador, infantería, infantería de asalto, tanque, artillería, caza, bombardero, patrullera, crucero y pesquero.
+- Dieciocho roles de unidad: trabajadores, cuatro tipos de infantería, motos, tres blindados, cuatro aeronaves y cinco barcos.
 - Nueve estructuras, todas mejorables a nivel II. Las unidades avanzadas requieren la mejora en **el edificio que las produce**.
 - Núcleos adicionales construibles para expandirse; los trabajadores entregan al núcleo terminado más cercano.
 
@@ -76,6 +76,14 @@ Los valores son costes y tiempos base, antes de los modificadores de facción.
 | Pesquero Cormorán | Astillero | I | 80 | 0 | 1 | 12 s |
 | Patrullera Marea | Astillero | I | 140 | 40 | 3 | 18 s |
 | Crucero Leviatán | Astillero | II | 300 | 180 | 5 | 32 s |
+| Granadero Brecha | Cuartel | I | 90 | 20 | 2 | 12 s |
+| Tirador Vigía | Cuartel | II | 110 | 55 | 2 | 16 s |
+| Moto Centella | Fábrica | I | 85 | 15 | 2 | 10 s |
+| Tanque Bastión | Fábrica | II | 280 | 140 | 5 | 30 s |
+| Interceptor Aguja | Aeródromo | I | 120 | 85 | 2 | 17 s |
+| Cañonera Cóndor | Aeródromo | II | 230 | 110 | 4 | 25 s |
+| Torpedero Barracuda | Astillero | II | 160 | 90 | 3 | 20 s |
+| Transporte Albatros | Astillero | I | 180 | 45 | 3 | 22 s |
 
 La fábrica y el aeródromo requieren un cuartel terminado. El astillero necesita terreno junto al mar, lago o río. Las unidades navales salen al agua, las terrestres a suelo transitable y las aéreas despegan del aeródromo. Infantería, cazas, barcos y torretas pueden atacar aeronaves; tanques, artillería y bombarderos se especializan en objetivos de superficie. Tanques, artillería, bombarderos y cruceros causan daño de área sin fuego amigo.
 
@@ -94,6 +102,32 @@ La fábrica y el aeródromo requieren un cuartel terminado. El astillero necesit
 **Todas las mejoras añaden 35% de vida a la estructura.** Selecciona una estructura terminada y pulsa **U**. No puede investigar mientras tenga unidades en cola ni producir durante la investigación. La mejora no se comparte con otros edificios del mismo tipo.
 
 Cada productor puede guardar su propio punto de reunión, visible como una bandera **solo mientras ese edificio está seleccionado**. Las unidades recién entrenadas van automáticamente allí; un trabajador con bandera en un árbol comienza a talarlo y un pesquero con bandera sobre un banco empieza a pescar. Las banderas navales requieren agua conectada. También puedes fijar una bandera con clic izquierdo en terreno vacío mientras está seleccionado el productor.
+
+## Colas, transportes e investigaciones
+
+Mantén **Shift** mientras colocas obras para que un trabajador las construya una tras otra. Se pagan y reservan al colocarlas. **Esc** sale del modo de colocación sin interrumpir la cola. **H** o una nueva orden manual interrumpe la cola; las obras sin terminar permanecen y otro trabajador puede reanudarlas con clic derecho. Una reserva destruida se salta automáticamente.
+
+El **Albatros** transporta hasta **8 plazas**, calculadas con los suministros de cada pasajero (un trabajador ocupa 1; un tanque pesado, 5). Acércalo a una costa, selecciona unidades terrestres y haz clic derecho sobre él. Para desembarcar, selecciona el barco y pulsa **D** junto a tierra accesible. Si no hay espacio, los pasajeros restantes siguen embarcados. El hundimiento pierde toda la carga. Los pasajeros siguen contando para el límite de 2.000 y no atacan ni aportan visión mientras viajan.
+
+Los **interceptores** solo atacan aeronaves y los **torpederos** solo objetivos marítimos. Los tiradores tienen gran alcance; las motos destacan por velocidad; granaderos y tanques pesados causan daño de área. Las cañoneras atacan objetivos de superficie.
+
+Cada tecnología tiene **tres niveles**, requiere el edificio de nivel II y se comparte con el ejército propio. F1/F2 inicia la investigación desde el edificio correspondiente. No se puede investigar y producir simultáneamente en el mismo edificio, ni investigar la misma tecnología en dos edificios a la vez. Los costes indicados son del nivel 1; se multiplican por 2 y 3 para los siguientes. Los tiempos son 28, 36 y 44 segundos.
+
+| Tecnología | Edificio | Mineral | Gas | Madera | Pescado | Beneficio por nivel |
+| --- | --- | ---: | ---: | ---: | ---: | --- |
+| Munición mejorada | Cuartel | 130 | 60 | 60 | 30 | +12% daño |
+| Blindaje compuesto | Cuartel | 120 | 50 | 90 | 20 | −2 daño recibido (mínimo 1) |
+| Motores avanzados | Fábrica | 150 | 100 | 50 | 40 | +8% velocidad |
+| Fortificación | Núcleo | 100 | 40 | 180 | 50 | +15% vida base de estructuras |
+| Logística industrial | Núcleo | 180 | 60 | 120 | 100 | Reduce un 10% el tiempo de nuevos entrenamientos |
+| Ópticas de combate | Aeródromo | 140 | 120 | 70 | 50 | +8% alcance y +10% visión |
+| Arsenal naval | Astillero | 160 | 100 | 160 | 100 | +15% daño naval |
+
+Estos costes consumen cada recurso por separado: la madera no sustituye minerales en investigaciones. Las mejoras de combate afectan a unidades existentes y futuras. La recolección conserva 500 ms por recurso y las refinerías acuáticas conservan 1 gas/s.
+
+Los mapas incorporan más lagos de contornos, tamaños y profundidades distintos, ríos que varían con la semilla, afluentes e islas con recursos. Las rutas entre bases siguen garantizadas por corredores y puentes; las islas requieren transporte o aviación.
+
+Las estructuras destruidas producen una explosión y fragmentos que vuelan, caen al suelo y desaparecen. La derrota detiene la banda sonora y reproduce una cadencia musical original de unos cuatro segundos, respetando el volumen de música y el silencio global.
 
 ## Rivales y objetivo
 
@@ -161,7 +195,7 @@ node --test tests/*.test.cjs
 - `audio.js`: música y efectos Web Audio.
 - `index.html` / `style.css`: interfaz adaptable.
 
-56 pruebas automatizadas cubren economía finita, carga, selección de recursos, gas, construcción, mejoras, requisitos locales de producción, navegación naval, aeronaves, IA, victorias y derrotas completas, preferencias, audio, semillas, los cinco tamaños, conectividad y selección isométrica. Se ejecutan con DOM/canvas/audio simulados; no sustituyen la revisión en un navegador real. La suite incluye tala, pesca, banderas por productor, diez grupos y reservas del límite de población, además de una simulación con 2.000 unidades activas. Las consultas espaciales y el detalle reducido de unidades lejanas o de escenas con más de 350 unidades visibles limitan el coste; no garantizan una tasa de fotogramas específica en todos los dispositivos. Se revisaron también renders del motor y de los modelos con un canvas nativo.
+67 pruebas automatizadas cubren economía finita, carga, selección de recursos, gas, construcción, mejoras, requisitos locales de producción, navegación naval, aeronaves, IA, victorias y derrotas completas, preferencias, audio, semillas, los cinco tamaños, conectividad y selección isométrica. Se ejecutan con DOM/canvas/audio simulados; no sustituyen la revisión en un navegador real. La suite incluye tala, pesca, banderas por productor, diez grupos y reservas del límite de población, además de una simulación con 2.000 unidades activas. Las consultas espaciales y el detalle reducido de unidades lejanas o de escenas con más de 350 unidades visibles limitan el coste; no garantizan una tasa de fotogramas específica en todos los dispositivos. Se revisaron también renders del motor y de los modelos con un canvas nativo.
 
 GitHub Actions comprueba sintaxis y pruebas. GitHub Pages publica la raíz de `main` y se actualiza con cada push. Todos los archivos usan rutas relativas. Las fuentes externas son opcionales y hay fuentes del sistema como respaldo. Sin Web Audio, el juego continúa sin sonido.
 

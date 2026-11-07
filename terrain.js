@@ -20,17 +20,27 @@ globalThis.PixelTerrain = (() => {
  const valley=Math.hypot((x-n*.63)/(n*.09),(y-n*.65)/(n*.06));if(valley<1){tiles[i]=7;height[i]=0;decor[i]=hash(x,y,seed+8)>.6?4:0;}}
  // Inland lakes feed a meandering river that reaches the coastal sea.
  const lakeCenters=[[n*.33,n*.51,Math.max(3,n*.055),Math.max(3,n*.08)],[n*.69,n*.69,Math.max(3,n*.065),Math.max(2,n*.045)]];
- for(let y=6;y<n-6;y++)for(let x=6;x<n-6;x++){const i=y*n+x;for(const [cx,cy,rx,ry] of lakeCenters){const radius=Math.hypot((x-cx)/rx,(y-cy)/ry),shore=1+(noise(x/3,y/3,seed+818)-.5)*.3;if(radius<shore){tiles[i]=radius<shore*.7?0:1;height[i]=0;decor[i]=0;waterKind[i]=1;}else if(radius<shore+.16){tiles[i]=2;height[i]=0;decor[i]=0;}}}
- const riverWidth=Math.max(1.3,n*.006);
- for(let y=0;y<n;y++){const cx=n*.33+Math.sin((y-n*.51)/(n*.12))*n*.065;for(let x=Math.max(0,Math.floor(cx-riverWidth-1));x<=Math.min(n-1,Math.ceil(cx+riverWidth+1));x++){const i=y*n+x,d=Math.abs(x-cx);if(d<=riverWidth){tiles[i]=d<riverWidth*.6?0:1;height[i]=0;decor[i]=0;if(!waterKind[i])waterKind[i]=2;}else if(tiles[i]>=2){tiles[i]=2;height[i]=0;decor[i]=0;}}}
+ for(let k=0;k<4+size*2;k++){const cx=n*(.22+hash(k,2,seed+810)*.56),cy=n*(.22+hash(k,3,seed+810)*.56);if(Math.hypot(cx-ridgeX,cy-ridgeY)<n*.12)continue;lakeCenters.push([cx,cy,Math.max(2,n*(.018+hash(k,4,seed+810)*.035)),Math.max(2,n*(.02+hash(k,5,seed+810)*.06))]);}
+
+ for(const [cx,cy,rx,ry] of lakeCenters){for(let y=Math.max(6,Math.floor(cy-ry*1.6));y<Math.min(n-6,cy+ry*1.6);y++)for(let x=Math.max(6,Math.floor(cx-rx*1.6));x<Math.min(n-6,cx+rx*1.6);x++){const i=y*n+x;const radius=Math.hypot((x-cx)/rx,(y-cy)/ry),shore=1+(noise(x/3,y/3,seed+818)-.5)*.5+Math.sin(Math.atan2(y-cy,x-cx)*3+seed%11)*.12;if(radius<shore){tiles[i]=radius<shore*.7?0:1;height[i]=0;decor[i]=0;waterKind[i]=1;}else if(radius<shore+.16){tiles[i]=2;height[i]=0;decor[i]=0;}}}
+ const riverWidth=Math.max(1.3,n*.006)*(1+hash(2,3,seed)*.5);
+ for(let y=0;y<n;y++){const cx=n*.33+Math.sin((y-n*.51)/(n*(.09+hash(3,4,seed)*.06)))*n*.065+(noise(y/12,1,seed+777)-.5)*n*.05;for(let x=Math.max(0,Math.floor(cx-riverWidth-1));x<=Math.min(n-1,Math.ceil(cx+riverWidth+1));x++){const i=y*n+x,d=Math.abs(x-cx);if(d<=riverWidth){tiles[i]=d<riverWidth*.6?0:1;height[i]=0;decor[i]=0;if(!waterKind[i])waterKind[i]=2;}else if(tiles[i]>=2){tiles[i]=2;height[i]=0;decor[i]=0;}}}
  // A tributary joins the second lake to the main river.
  for(let x=Math.floor(n*.27);x<=Math.ceil(n*.7);x++){const cy=n*.69+Math.sin((x-n*.69)/(n*.1))*n*.025;for(let y=Math.floor(cy-1.5);y<=Math.ceil(cy+1.5);y++){const i=y*n+x;if(y>5&&y<n-6){tiles[i]=1;height[i]=0;decor[i]=0;if(!waterKind[i])waterKind[i]=2;}}}
+ // Secondary rivers vary with the seed and connect interior lakes to different coasts.
+ for(let x=0;x<n;x++){const cy=n*(.22+hash(1,8,seed)*.07)+Math.sin(x/(n*.13)+hash(2,8,seed)*6)*n*.035,width=1.2+noise(x/8,1,seed+91)*Math.max(1,n*.005);for(let y=Math.max(0,Math.floor(cy-width));y<=Math.min(n-1,Math.ceil(cy+width));y++){const i=y*n+x;if(Math.abs(y-cy)>width)continue;tiles[i]=1;height[i]=0;decor[i]=0;waterKind[i]=2;}}
+ // Lake archipelagos have a full water ring and flat, wooded islands for naval landings.
+ const islands=[];
+ for(let k=0;k<1+Math.min(3,size);k++){const cx=Math.floor(n*(k===0?.58:.3+hash(k,20,seed)*.4)),cy=Math.floor(n*(k===0?.64:.35+hash(k,21,seed)*.35)),outer=Math.max(4,n*.055),inner=Math.max(1.7,n*.017);if(k&&(Math.hypot(cx-ridgeX,cy-ridgeY)<n*.14||islands.some(p=>Math.hypot(p.x/TILE-.5-cx,p.y/TILE-.5-cy)<outer*2.1)))continue;
+ for(let y=Math.floor(cy-outer-1);y<=cy+outer+1;y++)for(let x=Math.floor(cx-outer-1);x<=cx+outer+1;x++){if(x<6||y<6||x>=n-6||y>=n-6)continue;const i=y*n+x,distance=Math.hypot((x-cx),(y-cy)*1.08),coast=outer*(1+(noise(x/3,y/3,seed+k)-.5)*.15);if(distance<coast){tiles[i]=distance>coast-1?1:0;height[i]=0;decor[i]=0;waterKind[i]=1;}if(distance<inner){tiles[i]=distance>inner-.7?2:4;height[i]=0;decor[i]=distance<inner-.7&&hash(x,y,seed)>.4?1:0;waterKind[i]=0;}}
+ islands.push({x:(cx+.5)*TILE,y:(cy+.5)*TILE,radius:inner*TILE});}
  // Guaranteed land corridors and flat landing zones keep every seed playable.
  const roads=[10,n-11];for(let y=6;y<n-6;y++)for(let x=6;x<n-6;x++){const i=y*n+x;if(roads.some(v=>Math.abs(x-v)<=1||Math.abs(y-v)<=1)){if(tiles[i]<=1){tiles[i]=9;bridges[i]=1;}else tiles[i]=8;height[i]=0;decor[i]=0;}}
  for(const b of bases){const bx=Math.floor(b.x/TILE),by=Math.floor(b.y/TILE);for(let y=by-4;y<=by+4;y++)for(let x=bx-4;x<=bx+4;x++){const i=y*n+x;if(x>=6&&y>=6&&x<n-6&&y<n-6){tiles[i]=3;waterKind[i]=0;bridges[i]=0;height[i]=0;decor[i]=hash(x,y,seed+512)>.7?4:0;}}}
- const map={n,w:n*TILE,h:n*TILE,size,seed:seedText,tiles,height,decor,variant,waterKind,bridges,bases,cache:new Map(),resources:[]};
+ const map={n,w:n*TILE,h:n*TILE,size,seed:seedText,tiles,height,decor,variant,waterKind,bridges,bases,islands,lakeCenters,cache:new Map(),resources:[]};
  for(const b of bases){for(let j=0;j<5;j++)addResource(map,b.x-150+(j%3)*55,b.y+105+Math.floor(j/3)*55,'mineral');addResource(map,b.x+170,b.y-90,'gas');}
  for(let y=16;y<n-15;y+=9)for(let x=16;x<n-15;x+=9){const i=y*n+x;if(passable(map,x,y,'ground')&&tiles[i]!==8&&hash(x,y,seed+99)>.35){addResource(map,(x+.5)*TILE,(y+.5)*TILE,hash(x,y,seed+101)>.8?'gas':'mineral');}}
+ for(const isle of islands)addResource(map,isle.x-45,isle.y,'mineral');
  // Every tree is a finite selectable resource. Keep mineral IDs stable for starting workers.
  for(const b of bases){const bx=Math.floor(b.x/TILE),by=Math.floor(b.y/TILE);for(const [dx,dy] of [[-3,-2],[-2,-3],[-3,-3]]){const i=(by+dy)*n+bx+dx;if(tiles[i]>=2&&tiles[i]!==6){decor[i]=1;}}}
  map.treeNodes=new Int32Array(n*n);map.treeNodes.fill(-1);
