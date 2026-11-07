@@ -10,5 +10,5 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - run: for file in game.js factions.js models.js lobby.js audio.js; do node --check "$file"; done
+      - run: for file in game.js factions.js models.js terrain.js lobby.js audio.js; do node --check "$file"; done
       - run: node --test tests/*.test.cjs

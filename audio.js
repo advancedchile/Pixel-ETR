@@ -33,13 +33,16 @@ globalThis.PixelAudio = (() => {
  async function start(faction='aurora'){theme=faction;if(!init())return false;try{await ctx.resume();}catch{return false;}clearScore();limits.clear();running=true;step=0;next=ctx.currentTime+.08;if(timer)clearInterval(timer);timer=setInterval(schedule,80);schedule();return true;}
  function pause(value){running=!value;if(ctx){if(value){ctx.suspend().catch(()=>{});}else{next=ctx.currentTime+.05;ctx.resume().catch(()=>{});}}}
  function stop(){running=false;clearScore();if(timer){clearInterval(timer);timer=null;}}
- function sfx(kind,pan=0){if(!ctx||ctx.state!=='running'||muted||effects===0)return;const t=ctx.currentTime,min={shot:.055,tank:.12,build:.28,mine:.35,move:.1,step:.22,drive:.3}[kind]||.12;if(t-(limits.get(kind)??-10)<min)return;limits.set(kind,t);
+ function sfx(kind,pan=0){if(!ctx||ctx.state!=='running'||muted||effects===0)return;const t=ctx.currentTime,min={shot:.055,tank:.12,build:.28,mine:.25,drill:.25,gasMine:.3,unload:.15,move:.1,step:.22,drive:.3}[kind]||.12;if(t-(limits.get(kind)??-10)<min)return;limits.set(kind,t);
   const p=ctx.createStereoPanner?ctx.createStereoPanner():ctx.createGain();if(p.pan)p.pan.value=Math.max(-.8,Math.min(.8,pan));p.connect(sfxBus);setTimeout(()=>p.disconnect(),1800);
   if(kind==='shot'){hiss(t,.07,.18,3800,p);tone(750,t,.1,.11,'sawtooth',p,130);}
   else if(kind==='tank'||kind==='explode'){hiss(t,.5,.3,850,p);tone(100,t,.45,.3,'sine',p,24);}
   else if(kind==='build'){hiss(t,.1,.12,2400,p);tone(330,t,.07,.08,'square',p,170);tone(900,t+.08,.08,.035,'sine',p,600);}
   else if(kind==='step'){hiss(t,.045,.025,700,p);tone(100,t,.045,.02,'sine',p,60);}
   else if(kind==='drive'){hiss(t,.22,.035,450,p);tone(65,t,.2,.025,'triangle',p,48);}
+  else if(kind==='drill'){hiss(t,.14,.12,2300,p);tone(180+Math.random()*40,t,.12,.07,'sawtooth',p,90);tone(1600,t,.05,.06,'triangle',p,1000);}
+  else if(kind==='gasMine'){hiss(t,.22,.13,1700,p);tone(210,t,.18,.04,'sine',p,350);}
+  else if(kind==='unload'){[700,900,1150].forEach((f,i)=>tone(f,t+i*.04,.08,.07,'triangle',p));hiss(t,.06,.05,2500,p);}
   else if(kind==='mine'){tone(1350,t,.07,.06,'triangle',p,700);hiss(t,.08,.04,3000,p);}
   else if(kind==='complete'||kind==='ready'||kind==='victory'){[440,554,659,880].forEach((f,i)=>tone(f,t+i*.1,.24,.09,'triangle',p));}
   else if(kind==='alert'||kind==='defeat'){[0,.23,.46].forEach(offset=>tone(360,t+offset,.2,.12,'sawtooth',p,240));}
