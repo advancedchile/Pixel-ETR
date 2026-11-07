@@ -4,7 +4,7 @@
 
 Estrategia en tiempo real en español: tres facciones, mapas isométricos procedurales y una coalición de una a tres IA. Para ordenador con ratón y teclado. No requiere instalación ni cuenta.
 
-## Operación 05 — Refinerías y gas acuático
+## Operación 06 — Control táctico
 
 - Proyección isométrica con elevación, orden de profundidad y zoom del 45% al 175%.
 - Modelos construidos con geometría volumétrica: caras iluminadas, paneles, remaches, rejillas, tuberías, trenes de rodaje, cubiertas navales, alas, propulsores y accesorios de facción.
@@ -16,6 +16,10 @@ Estrategia en tiempo real en español: tres facciones, mapas isométricos proced
 - Diez roles de unidad: trabajador, infantería, infantería de asalto, tanque, artillería, caza, bombardero, patrullera, crucero y pesquero.
 - Nueve estructuras, todas mejorables a nivel II. Las unidades avanzadas requieren la mejora en **el edificio que las produce**.
 - Núcleos adicionales construibles para expandirse; los trabajadores entregan al núcleo terminado más cercano.
+
+La partida ocupa toda la ventana, sin scroll general. La barra superior y el panel derecho se superponen al campo de batalla. Los paneles y diálogos conservan desplazamiento interno cuando hace falta. El contador de recolectores inactivos incluye trabajadores y pesqueros sin órdenes.
+
+Todos los recolectores muestran el recurso y su carga incremental en el mundo y en la selección; dentro de una refinería, las cargas de los operarios aparecen en el panel del edificio. Minerales, gas terrestre, madera y pesca avanzan a una unidad cada 500 ms, hasta 15; el gas acuático automático conserva su tasa de 1 por segundo.
 
 ## Generación de mapas
 
@@ -45,7 +49,7 @@ Las bonificaciones de vida, daño y velocidad afectan a unidades móviles, inclu
 
 Los seis trabajadores iniciales recogen minerales automáticamente. Selecciona un depósito con clic izquierdo para consultar **restante / capacidad inicial**. Con un trabajador seleccionado, el clic derecho ordena recolectar. Cada trabajador transporta hasta 15 minerales, gas o madera, sin exceder la cantidad restante.
 
-El gas terrestre solo se extrae dentro de una refinería construida **sobre el depósito**. La colocación se ajusta al centro de la reserva y un depósito admite una sola estructura. Envía trabajadores con clic derecho sobre la refinería: entran hasta **4 simultáneamente**; los demás esperan fuera en orden de llegada. Cada operario sale con hasta 15 de gas, lo entrega al núcleo y regresa a la cola. Una orden nueva, una baja o la destrucción del edificio libera la plaza. Extracción II acelera el trabajo un 50%.
+El gas terrestre solo se extrae dentro de una refinería construida **sobre el depósito**. La colocación se ajusta al centro de la reserva y un depósito admite una sola estructura. Envía trabajadores con clic derecho sobre la refinería: entran hasta **4 simultáneamente**; los demás esperan fuera en orden de llegada. Cada operario sale con hasta 15 de gas, lo entrega al núcleo y regresa a la cola. Una orden nueva, una baja o la destrucción del edificio libera la plaza. Cada unidad de recurso tarda **500 ms**: la carga progresa de 1 en 1 hasta 15 en 7,5 segundos. Refuerzo II aumenta la resistencia del edificio y mantiene esta cadencia.
 
 Los océanos y lagos también tienen reservas de gas de 5.000–10.000 unidades. Selecciona un **pesquero**, pulsa **G** y coloca una **refinería acuática** sobre una reserva visible. El pesquero debe llegar y terminar la construcción. La plataforma extrae automáticamente **1 gas por segundo**, directamente al almacén, sin operarios. Se detiene al agotarse la reserva, durante la pausa o al ser destruida. Su mejora aumenta la vida, manteniendo la extracción en 1 gas/s.
 
@@ -80,7 +84,7 @@ La fábrica y el aeródromo requieren un cuartel terminado. El astillero necesit
 | Depósito | 100 / 0 | 12 s | 100 / 40 / 16 s | 150 suministros en lugar de 100 |
 | Cuartel | 150 / 0 | 18 s | 150 / 75 / 22 s | Infantería de asalto |
 | Refinería acuática | 200 / 0 | 24 s | 150 / 60 / 24 s | +35% vida; conserva 1 gas/s |
-| Refinería | 125 / 0 | 15 s | 120 / 60 / 20 s | Extracción de gas 50% más rápida |
+| Refinería | 125 / 0 | 15 s | 120 / 60 / 20 s | +35% vida; conserva 500 ms por recurso |
 | Fábrica | 200 / 75 | 26 s | 200 / 120 / 28 s | Artillería Titán |
 | Torreta | 100 / 25 | 14 s | 130 / 80 / 20 s | +30% daño y +40 alcance |
 | Aeródromo | 200 / 100 | 24 s | 220 / 140 / 30 s | Bombardero Eclipse |
@@ -112,14 +116,15 @@ La IA usa defensas, progresión tecnológica programada y refuerzos; no simula u
 | Seleccionar grupo | Arrastrar; Mayús añade |
 | Seleccionar mismo tipo en pantalla | Doble clic |
 | Mover / atacar / recolectar / reanudar obra | Clic derecho |
-| Atacar al avanzar | A y clic izquierdo |
+| Atacar al avanzar | A (cursor de espada) y clic izquierdo; Esc o clic derecho cancela |
+| Recolectores inactivos | Indicador ◈ en la barra superior; clic para seleccionarlos |
 | Detener | H |
 | Construir | Selecciona trabajador, botón y suelo visible válido |
 | Punto de reunión | Selecciona productor, Q y clic izquierdo, o clic derecho en el destino |
 | Quitar bandera | Z con el productor seleccionado |
 | Mejorar estructura | U |
 | Cancelar colocación | Esc o clic derecho |
-| Mover cámara | Flechas o minimapa |
+| Mover cámara | Flechas, cursor en los bordes del campo o arrastrar el minimapa |
 | Zoom | Rueda o botones +/− |
 | Volver a la base | Espacio |
 | Guardar / seleccionar grupo | Ctrl + 1–0 / 1–0; máximo 40 unidades por grupo |
@@ -153,7 +158,7 @@ node --test tests/*.test.cjs
 - `audio.js`: música y efectos Web Audio.
 - `index.html` / `style.css`: interfaz adaptable.
 
-47 pruebas automatizadas cubren economía finita, carga, selección de recursos, gas, construcción, mejoras, requisitos locales de producción, navegación naval, aeronaves, IA, victorias y derrotas completas, preferencias, audio, semillas, los cinco tamaños, conectividad y selección isométrica. Se ejecutan con DOM/canvas/audio simulados; no sustituyen la revisión en un navegador real. La suite incluye tala, pesca, banderas por productor, diez grupos y reservas del límite de población, además de una simulación con 2.000 unidades activas. Las consultas espaciales y el detalle reducido de unidades lejanas o de escenas con más de 350 unidades visibles limitan el coste; no garantizan una tasa de fotogramas específica en todos los dispositivos. Se revisaron también renders del motor y de los modelos con un canvas nativo.
+52 pruebas automatizadas cubren economía finita, carga, selección de recursos, gas, construcción, mejoras, requisitos locales de producción, navegación naval, aeronaves, IA, victorias y derrotas completas, preferencias, audio, semillas, los cinco tamaños, conectividad y selección isométrica. Se ejecutan con DOM/canvas/audio simulados; no sustituyen la revisión en un navegador real. La suite incluye tala, pesca, banderas por productor, diez grupos y reservas del límite de población, además de una simulación con 2.000 unidades activas. Las consultas espaciales y el detalle reducido de unidades lejanas o de escenas con más de 350 unidades visibles limitan el coste; no garantizan una tasa de fotogramas específica en todos los dispositivos. Se revisaron también renders del motor y de los modelos con un canvas nativo.
 
 GitHub Actions comprueba sintaxis y pruebas. GitHub Pages publica la raíz de `main` y se actualiza con cada push. Todos los archivos usan rutas relativas. Las fuentes externas son opcionales y hay fuentes del sistema como respaldo. Sin Web Audio, el juego continúa sin sonido.
 
