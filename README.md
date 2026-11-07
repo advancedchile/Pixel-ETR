@@ -8,7 +8,7 @@ Estrategia en tiempo real en español: tres facciones, mapas isométricos proced
 
 - Proyección isométrica con elevación, orden de profundidad y zoom del 45% al 175%.
 - Modelos construidos con geometría volumétrica: caras iluminadas, paneles, remaches, rejillas, tuberías, trenes de rodaje, cubiertas navales, alas, propulsores y accesorios de facción.
-- Animación de marcha, orientación en ocho direcciones, movimiento de orugas, levitación, retroceso, minería, construcción con andamios y aparición progresiva, investigación y luces de actividad.
+- Animación de marcha, orientación en ocho direcciones, movimiento de orugas, levitación, retroceso, minería, construcción por cimientos, armazón, instalaciones y revestimiento, con grúa, andamios y soldadura, investigación y luces de actividad.
 - Terreno con mar, lagos, ríos sinuosos, puentes, aguas someras, playas, dos tipos de árboles, vegetación, rocas, acantilados escalonados, valles y montañas con cumbres nevadas. Texturas, espuma, oleaje y sombras procedurales.
 - Mapas generados por **semilla reproducible**, botón para generar otra semilla, vista previa y cinco tamaños.
 - Depósitos minerales con roca fracturada, vetas incrustadas y fragmentos dispersos; gas terrestre con grietas, costras minerales y vapor, y gas submarino con burbujas y ondas. Siluetas distintas por depósito y menor presencia de mena al agotarse.
@@ -54,7 +54,7 @@ El gas terrestre solo se extrae dentro de una refinería construida **sobre el d
 
 Los océanos y lagos también tienen reservas de gas de 5.000–10.000 unidades. Selecciona un **pesquero**, pulsa **G** y coloca una **refinería acuática** sobre una reserva visible. El pesquero debe llegar y terminar la construcción. La plataforma extrae automáticamente **1 gas por segundo**, directamente al almacén, sin operarios. Se detiene al agotarse la reserva, durante la pausa o al ser destruida. Su mejora aumenta la vida, manteniendo la extracción en 1 gas/s.
 
-Cada núcleo terminado aporta 20 suministros. Los depósitos aportan 100 o 150 en nivel II, con un máximo total de 10.000 suministros. El límite independiente de población es de **2.000 unidades propias**, incluyendo trabajadores, barcos, aeronaves y las unidades reservadas en todas las colas. Las colas de producción reservan suministros y admiten hasta cinco unidades. La construcción necesita un trabajador presente; dar otra orden pausa la obra. Clic derecho sobre la obra con un trabajador permite continuar.
+Cada núcleo terminado aporta 20 suministros. Los depósitos aportan 100 o 150 en nivel II, con un máximo total de 10.000 suministros. El límite independiente de población es de **2.000 unidades propias**, incluyendo trabajadores, barcos, aeronaves y las unidades reservadas en todas las colas. Las colas de producción reservan suministros y admiten hasta cinco unidades. La construcción tiene un modelo independiente: cimientos, vigas, equipos internos, paneles y pruebas. La grúa y la soldadura solo se animan mientras hay trabajo; al 100% se sustituyen por el edificio terminado. La construcción necesita un trabajador presente; dar otra orden pausa la obra. Clic derecho sobre la obra con un trabajador permite continuar.
 
 Los trabajadores talan árboles con clic derecho y entregan la madera al núcleo. La madera sustituye minerales uno a uno en construcción y mejoras, y se consume primero. Los árboles agotados dejan tocones.
 
@@ -142,6 +142,8 @@ Banda sonora procedural de estrategia espacial con capas ambientales, bajo, perc
 
 No contiene grabaciones, melodías, modelos, personajes ni código de StarCraft.
 
+Los botones de acción conservan sus nodos entre actualizaciones de la interfaz: cambios de recursos, investigación y colas actualizan su contenido sin interrumpir los clics. El minimapa limita sus repintados a cinco por segundo.
+
 ## Desarrollo y comprobaciones
 
 Sitio estático sin dependencias de ejecución ni compilación. Abre `index.html` o sirve la carpeta con `python3 -m http.server 8000`.
@@ -159,7 +161,7 @@ node --test tests/*.test.cjs
 - `audio.js`: música y efectos Web Audio.
 - `index.html` / `style.css`: interfaz adaptable.
 
-52 pruebas automatizadas cubren economía finita, carga, selección de recursos, gas, construcción, mejoras, requisitos locales de producción, navegación naval, aeronaves, IA, victorias y derrotas completas, preferencias, audio, semillas, los cinco tamaños, conectividad y selección isométrica. Se ejecutan con DOM/canvas/audio simulados; no sustituyen la revisión en un navegador real. La suite incluye tala, pesca, banderas por productor, diez grupos y reservas del límite de población, además de una simulación con 2.000 unidades activas. Las consultas espaciales y el detalle reducido de unidades lejanas o de escenas con más de 350 unidades visibles limitan el coste; no garantizan una tasa de fotogramas específica en todos los dispositivos. Se revisaron también renders del motor y de los modelos con un canvas nativo.
+56 pruebas automatizadas cubren economía finita, carga, selección de recursos, gas, construcción, mejoras, requisitos locales de producción, navegación naval, aeronaves, IA, victorias y derrotas completas, preferencias, audio, semillas, los cinco tamaños, conectividad y selección isométrica. Se ejecutan con DOM/canvas/audio simulados; no sustituyen la revisión en un navegador real. La suite incluye tala, pesca, banderas por productor, diez grupos y reservas del límite de población, además de una simulación con 2.000 unidades activas. Las consultas espaciales y el detalle reducido de unidades lejanas o de escenas con más de 350 unidades visibles limitan el coste; no garantizan una tasa de fotogramas específica en todos los dispositivos. Se revisaron también renders del motor y de los modelos con un canvas nativo.
 
 GitHub Actions comprueba sintaxis y pruebas. GitHub Pages publica la raíz de `main` y se actualiza con cada push. Todos los archivos usan rutas relativas. Las fuentes externas son opcionales y hay fuentes del sistema como respaldo. Sin Web Audio, el juego continúa sin sonido.
 
