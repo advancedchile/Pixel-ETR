@@ -39,12 +39,21 @@ globalThis.PixelTerrain = (() => {
  function fishAt(x,y){const i=cell(map,x,y);if(i<0||tiles[i]>1||fishSpots.some(r=>Math.hypot(r.x-x,r.y-y)<100))return;const capacity=5000+Math.floor(hash(Math.floor(x),Math.floor(y),seed+501)*5001);fishSpots.push({x,y});map.resources.push({id:map.resources.length,x,y,kind:'fish',capacity,amount:capacity});}
  for(let y=2;y<n-2;y+=5)for(let x=2;x<n-2;x+=5)if(tiles[y*n+x]<=1&&hash(x,y,seed+511)>.35)fishAt((x+.5)*TILE,(y+.5)*TILE);
  for(const b of bases){const p=waterNear(map,b.x,b.y,12);if(p)fishAt(p.x,p.y);}
+ // Offshore reserves: separate gas vents in open sea and inland lakes.
+ const offshore=[];
+ function gasAt(tx,ty){const x=(tx+.5)*TILE,y=(ty+.5)*TILE,i=ty*n+tx;if(tx<1||ty<1||tx>=n-1||ty>=n-1||tiles[i]>1||bridges[i])return false;
+ if(![[-1,-1],[1,-1],[1,1],[-1,1]].every(([dx,dy])=>tiles[(ty+dy)*n+tx+dx]<=1))return false;
+ if(fishSpots.some(r=>Math.hypot(r.x-x,r.y-y)<105)||offshore.some(r=>Math.hypot(r.x-x,r.y-y)<240))return false;
+ const capacity=5000+Math.floor(hash(tx,ty,seed+905)*5001);offshore.push({x,y});map.resources.push({id:map.resources.length,x,y,kind:'gas',aquatic:true,capacity,amount:capacity});return true;}
+ // Guarantee at least one open-sea and one lake reserve before scattered vents.
+ for(const kind of [0,1]){let done=false;for(let y=2;y<n-2&&!done;y++)for(let x=2;x<n-2&&!done;x++)if(waterKind[y*n+x]===kind)done=gasAt(x,y);}
+ for(let y=3;y<n-3;y+=9)for(let x=3;x<n-3;x+=9)if(hash(x,y,seed+906)>.3)gasAt(x,y);
  // Water components keep fishers from trying to unload into a different lake.
  map.waterRegion=new Int32Array(n*n);let region=0;const queue=new Int32Array(n*n);
  for(let i=0;i<n*n;i++)if((tiles[i]<=1||bridges[i])&&!map.waterRegion[i]){region++;let head=0,tail=1;queue[0]=i;map.waterRegion[i]=region;while(head<tail){const at=queue[head++],x=at%n,y=Math.floor(at/n);for(const [dx,dy] of [[1,0],[-1,0],[0,1],[0,-1]]){const xx=x+dx,yy=y+dy,j=yy*n+xx;if(xx>=0&&yy>=0&&xx<n&&yy<n&&!map.waterRegion[j]&&(tiles[j]<=1||bridges[j])){map.waterRegion[j]=region;queue[tail++]=j;}}}}
  return map;
  }
- function addResource(m,x,y,kind){const i=cell(m,x,y);if(i<0||m.tiles[i]<2||m.tiles[i]===6)return;const capacity=5000+Math.floor(hash(Math.floor(x),Math.floor(y),seedNumber(m.seed))*5001);m.decor[i]=0;m.height[i]=0;m.tiles[i]=3;m.resources.push({id:m.resources.length,x,y,kind,capacity,amount:capacity});}
+ function addResource(m,x,y,kind){const i=cell(m,x,y);if(i<0||m.tiles[i]<2||m.tiles[i]===6||m.bridges[i])return;if(kind==='gas'){const cx=Math.floor(x/TILE),cy=Math.floor(y/TILE),cells=[];for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++){const j=(cy+dy)*m.n+cx+dx;if(!passable(m,cx+dx,cy+dy,'ground')||m.bridges[j])return;cells.push(j);}for(const j of cells){m.height[j]=0;m.decor[j]=0;}}const capacity=5000+Math.floor(hash(Math.floor(x),Math.floor(y),seedNumber(m.seed))*5001);m.decor[i]=0;m.height[i]=0;m.tiles[i]=3;m.resources.push({id:m.resources.length,x,y,kind,capacity,amount:capacity});}
  function cell(m,x,y){const tx=Math.floor(x/TILE),ty=Math.floor(y/TILE);return tx<0||ty<0||tx>=m.n||ty>=m.n?-1:ty*m.n+tx;}
  function elevation(m,x,y){const i=cell(m,x,y);return i<0?0:m.height[i]*14;}
  function project(m,x,y,z=0){return {x:(x-y)*.75+m.h*.75,y:(x+y)*.375-z};}
@@ -80,6 +89,6 @@ globalThis.PixelTerrain = (() => {
  else{for(let j=0;j<6;j++){r(-14+j*5,Math.sin(j)*5,1,4+j%3,'#9bad67');if(j%2)r(-14+j*5,Math.sin(j)*5,3,2,v%2?'#d8b07d':'#c6c99a');}}
  }
  function resource(g,n,time){const p={x:n.x,y:n.y};g.save();g.translate(p.x,p.y);if(n.kind==='fish'){for(let i=0;i<5;i++){const xx=Math.sin(time*.6+i*1.3)*17,yy=Math.cos(time*.8+i)*9;polygon(g,[[xx-6,yy],[xx+3,yy-3],[xx+7,yy],[xx+3,yy+3]],i%2?'#9ac9c4':'#cbdaca');polygon(g,[[xx-5,yy],[xx-10,yy-3],[xx-10,yy+3]],'#86b9c0');}g.strokeStyle='#c4e3d077';g.beginPath();g.ellipse(0,0,27+Math.sin(time)*2,13,0,0,7);g.stroke();}
- else if(n.kind==='gas'){polygon(g,[[-24,0],[0,-13],[24,0],[0,13]],'#36483e');for(let i=0;i<4;i++){g.fillStyle=['#85c393','#b5d78a','#599b7b'][i%3];g.fillRect(-14+i*8,-12-i%2*5,7,17);}for(let i=0;i<4;i++){const a=(time*.35+i*.25)%1;g.fillStyle='#a3d9ac44';g.fillRect(-12+i*7,-20-a*30,5+a*9,4+a*6);}}else{polygon(g,[[-28,2],[0,-13],[28,2],[0,15]],'#294b54');for(let i=0;i<5;i++){const x=-23+i*10,h=15+(i*13%22);polygon(g,[[x,-h],[x+6,-h-6],[x+9,3],[x,8]],'#57afc6');polygon(g,[[x+6,-h-6],[x+13,-h],[x+14,3],[x+9,3]],'#247691');g.fillStyle='#b5f1e9';g.fillRect(x+3,-h+2,2,h-4);}}g.restore();}
+ else if(n.kind==='gas'){if(n.aquatic){g.strokeStyle='#afe8c5';g.beginPath();g.ellipse(0,0,29,14,0,0,7);g.stroke();}polygon(g,[[-24,0],[0,-13],[24,0],[0,13]],'#36483e');for(let i=0;i<4;i++){g.fillStyle=['#85c393','#b5d78a','#599b7b'][i%3];g.fillRect(-14+i*8,-12-i%2*5,7,17);}for(let i=0;i<4;i++){const a=(time*.35+i*.25)%1;g.fillStyle='#a3d9ac44';g.fillRect(-12+i*7,-20-a*30,5+a*9,4+a*6);}}else{polygon(g,[[-28,2],[0,-13],[28,2],[0,15]],'#294b54');for(let i=0;i<5;i++){const x=-23+i*10,h=15+(i*13%22);polygon(g,[[x,-h],[x+6,-h-6],[x+9,3],[x,8]],'#57afc6');polygon(g,[[x+6,-h-6],[x+13,-h],[x+14,3],[x+9,3]],'#247691');g.fillStyle='#b5f1e9';g.fillRect(x+3,-h+2,2,h-4);}}g.restore();}
  return {TILE,SIZES,generate,cell,elevation,project,unproject,pick,passable,waterNear,segment,path,tile,decoration,resource,colors,hash};
 })();

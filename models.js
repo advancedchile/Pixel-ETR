@@ -32,7 +32,8 @@ globalThis.PixelModels=(()=>{
  for(let i=0;i<6;i++)box(-s+i*10,-s,4,8,s*2,4,'#8d8065','#5f5b4d','#44483f',true);box(-s,-s,8,s,25,26,steel,d,d,true);vent(-s+3,-s+3,35,s-6,19);box(s-8,-s,8,4,4,58,steel,d,d);box(-8,-s,63,s,4,4,c,d,d);pipe(-s+4,s-8,10,s*1.7);for(let i=0;i<4;i++)glow(-s+i*16,s-1,9,4);
  }else if(e.type==='depot'){
  for(let i=0;i<3;i++){box(-s+i*14,-s,4,12,s*2,18,steel,d,d,true);box(-s+i*14+2,-s+2,22,8,s*2-4,3,c,d,d);}pipe(-s,s+2,12,s*2);
- }else if(e.type==='refinery'){
+ }else if(e.type==='refinery'||e.type==='aquaticRefinery'){
+ if(e.type==='aquaticRefinery'){for(const x of [-s-7,s-1])box(x,-s-8,-5,8,s*2+16,9,'#819aa0',dark,d);for(const [x,y] of [[-s,-s],[s,s]]){box(x-3,y-3,3,6,6,54,steel,d,d);glow(x,y,58,5);}box(-s,-s,55,s*2,4,4,c,d,d);pipe(-s,s+3,5,s*2);}
  for(const x of [-s+3,4]){box(x,-s+3,4,18,s*1.4,27,steel,d,d,true);box(x+3,-s+6,31,12,s*1.4-6,4,c,d,d);for(let j=0;j<4;j++)glow(x+9,s*.45,10+j*5,6);}pipe(-s+2,s*.55,10,s*2-4);box(-4,s*.55,4,8,10,18,c,d,d);for(let i=0;i<4;i++){const pt=p(-s+10+i*10,-s+10,38+(time*10+i*8)%28);g.fillStyle='#afc7a655';g.fillRect(pt[0],pt[1],5+i,4+i);}
  }else if(e.type==='turret'){
  box(-15,-15,4,30,30,12,steel,d,d,true);box(-9,-9,16,18,18,12,c,d,d,true);barrel(0,-3,25,34);glow(-5,-6,29);
