@@ -4,7 +4,7 @@ globalThis.PixelModels=(()=>{
  function constructionStage(e){const progress=Math.max(0,Math.min(1,1-(e.build||0)/(e.buildTotal||1))),index=progress<.2?0:progress<.45?1:progress<.72?2:progress<1?3:4;return {progress,index,label:['Cimientos','Armazón','Instalaciones','Revestimiento y pruebas','Terminada'][index]};}
 
  function draw(g,e,f,time,building=false,ghost=false){
- const angle=building&&e.type!=='turret'?0:Math.round((e.facing||0)/(Math.PI/4))*Math.PI/4,co=Math.cos(angle),si=Math.sin(angle),phase=(e.walk||0)*.16,step=e.moving?Math.sin(phase)*3:0,air=['fighter','bomber','interceptor','gunship'].includes(e.type),sea=['patrol','cruiser','fisher','torpedo','transport'].includes(e.type),hover=air?35+Math.sin(time*3+e.id)*2:f.style==='crystal'&&!building?5+Math.sin(time*2+e.id)*2:0;
+ const angle=building&&!['turret','dock'].includes(e.type)?0:Math.round((e.facing||0)/(Math.PI/4))*Math.PI/4,co=Math.cos(angle),si=Math.sin(angle),phase=(e.walk||0)*.16,step=e.moving?Math.sin(phase)*3:0,air=['fighter','bomber','interceptor','gunship'].includes(e.type),sea=['patrol','cruiser','fisher','torpedo','transport'].includes(e.type),hover=air?35+Math.sin(time*3+e.id)*2:f.style==='crystal'&&!building?5+Math.sin(time*2+e.id)*2:0;
  const c=f.color,l=f.light,d=f.dark,steel='#7d929c',dark='#253943',trim=e.team?['','#ff9a81','#f3c77d','#ef9fcf'][e.team]:'#d7efaa';
  g.save();g.translate(Math.round(e.x),Math.round(e.y));if(ghost)g.globalAlpha=.55;
  const p=(x,y,z=0)=>{const xx=x*co-y*si,yy=x*si+y*co;return [Math.round((xx-yy)*.75),Math.round((xx+yy)*.375-z-hover)];};

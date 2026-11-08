@@ -85,7 +85,7 @@ Los valores son costes y tiempos base, antes de los modificadores de facción.
 | Torpedero Barracuda | Astillero | II | 160 | 90 | 3 | 20 s |
 | Transporte Albatros | Astillero | I | 180 | 45 | 3 | 22 s |
 
-La fábrica y el aeródromo requieren un cuartel terminado. El astillero necesita terreno junto al mar, lago o río. Las unidades navales salen al agua, las terrestres a suelo transitable y las aéreas despegan del aeródromo. Infantería, cazas, barcos y torretas pueden atacar aeronaves; tanques, artillería y bombarderos se especializan en objetivos de superficie. Tanques, artillería, bombarderos y cruceros causan daño de área sin fuego amigo.
+La fábrica y el aeródromo requieren un cuartel terminado. El astillero se construye en una orilla llana, mitad en tierra y mitad en agua, con espacio para que salgan los barcos. Al colocarlo, se ajusta y orienta a la costa. Las unidades navales salen al agua, las terrestres a suelo transitable y las aéreas despegan del aeródromo. Infantería, cazas, barcos y torretas pueden atacar aeronaves; tanques, artillería y bombarderos se especializan en objetivos de superficie. Tanques, artillería, bombarderos y cruceros causan daño de área sin fuego amigo.
 
 | Estructura | Coste de construcción (minerales / gas) | Tiempo base | Mejora (minerales / gas / tiempo) | Beneficio adicional de nivel II |
 | --- | --- | ---: | --- | --- |
@@ -101,7 +101,7 @@ La fábrica y el aeródromo requieren un cuartel terminado. El astillero necesit
 
 **Todas las mejoras añaden 35% de vida a la estructura.** Selecciona una estructura terminada y pulsa **U**. No puede investigar mientras tenga unidades en cola ni producir durante la investigación. La mejora no se comparte con otros edificios del mismo tipo.
 
-Cada productor puede guardar su propio punto de reunión, visible como una bandera **solo mientras ese edificio está seleccionado**. Las unidades recién entrenadas van automáticamente allí; un trabajador con bandera en un árbol comienza a talarlo y un pesquero con bandera sobre un banco empieza a pescar. Las banderas navales requieren agua conectada. También puedes fijar una bandera con clic izquierdo en terreno vacío mientras está seleccionado el productor.
+Cada productor puede guardar su propio punto de reunión, visible como una bandera **solo mientras ese edificio está seleccionado**. Las unidades recién entrenadas van automáticamente allí; un trabajador con bandera en un árbol comienza a talarlo y un pesquero con bandera sobre un banco empieza a pescar. Las banderas navales requieren agua conectada. El núcleo solo acepta el punto de reunión mediante clic derecho. Los demás productores también permiten Q y clic izquierdo, o clic izquierdo en terreno vacío.
 
 ## Colas, transportes e investigaciones
 
@@ -155,7 +155,7 @@ La IA usa defensas, progresión tecnológica programada y refuerzos; no simula u
 | Recolectores inactivos | Indicador ◈ en la barra superior; clic para seleccionarlos |
 | Detener | H |
 | Construir | Selecciona trabajador, botón y suelo visible válido |
-| Punto de reunión | Selecciona productor, Q y clic izquierdo, o clic derecho en el destino |
+| Punto de reunión | Selecciona productor y haz clic derecho en el destino; excepto en el núcleo, también Q y clic izquierdo |
 | Quitar bandera | Z con el productor seleccionado |
 | Mejorar estructura | U |
 | Cancelar colocación | Esc o clic derecho |
@@ -195,10 +195,12 @@ node --test tests/*.test.cjs
 - `audio.js`: música y efectos Web Audio.
 - `index.html` / `style.css`: interfaz adaptable.
 
-67 pruebas automatizadas cubren economía finita, carga, selección de recursos, gas, construcción, mejoras, requisitos locales de producción, navegación naval, aeronaves, IA, victorias y derrotas completas, preferencias, audio, semillas, los cinco tamaños, conectividad y selección isométrica. Se ejecutan con DOM/canvas/audio simulados; no sustituyen la revisión en un navegador real. La suite incluye tala, pesca, banderas por productor, diez grupos y reservas del límite de población, además de una simulación con 2.000 unidades activas. Las consultas espaciales y el detalle reducido de unidades lejanas o de escenas con más de 350 unidades visibles limitan el coste; no garantizan una tasa de fotogramas específica en todos los dispositivos. Se revisaron también renders del motor y de los modelos con un canvas nativo.
+71 pruebas automatizadas cubren economía finita, carga, selección de recursos, gas, construcción, mejoras, requisitos locales de producción, navegación naval, aeronaves, IA, victorias y derrotas completas, preferencias, audio, semillas, los cinco tamaños, conectividad y selección isométrica. Se ejecutan con DOM/canvas/audio simulados; no sustituyen la revisión en un navegador real. La suite incluye tala, pesca, banderas por productor, diez grupos y reservas del límite de población, además de una simulación con 2.000 unidades activas. Las consultas espaciales y el detalle reducido de unidades lejanas o de escenas con más de 350 unidades visibles limitan el coste; no garantizan una tasa de fotogramas específica en todos los dispositivos. Se revisaron también renders del motor y de los modelos con un canvas nativo.
 
 GitHub Actions comprueba sintaxis y pruebas. GitHub Pages publica la raíz de `main` y se actualiza con cada push. Todos los archivos usan rutas relativas. Las fuentes externas son opcionales y hay fuentes del sistema como respaldo. Sin Web Audio, el juego continúa sin sonido.
 
 ## Alcance
 
 Escaramuza local contra IA. Sin multijugador en red, guardado de partidas ni controles táctiles completos. El relieve afecta la navegación, pero no simula balística ni oclusión de visión por montañas. Los edificios emplean evitación local; las rutas globales consideran el terreno. La apariencia es pixel art procedural isométrico.
+
+Al asignar la recolección con clic derecho, el depósito se resalta brevemente sin cambiar la selección del recolector. Los ataques enemigos contra tus unidades o estructuras muestran una alerta roja temporal en el minimapa y reproducen un sonido, con una pausa entre avisos para evitar repeticiones continuas.
